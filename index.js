@@ -2,23 +2,9 @@ const express = require('express')
 
 const server = express()
 server.use(express.json())
-server.use(incrementRequisitionCounter)
+server.use(logRequisitionsCounter)
 
 let requisitionCounter = 0
-
-//DEFAULT PROJECTS
-let projects = [
-    {
-        "id": 1,
-        "title": 'Javascript',
-        "tasks": []
-    },
-    {
-        "id": 2,
-        "title": 'GoStack',
-        "tasks": []
-    }
-]
 
 //MIDDLEWARES
 function checkProjectExists (req, res, next) {
@@ -33,12 +19,26 @@ function checkProjectExists (req, res, next) {
     next()
 }
 
-function incrementRequisitionCounter (req, res, next) {
+function logRequisitionsCounter (req, res, next) {
     requisitionCounter++
-    console.log(requisitionCounter)
+    console.log(`Número de requisições: ${requisitionCounter}`)
     
     next()
 }
+
+//DEFAULT PROJECTS
+let projects = [
+    {
+        "id": 1,
+        "title": 'Javascript',
+        "tasks": []
+    },
+    {
+        "id": 2,
+        "title": 'GoStack',
+        "tasks": []
+    }
+]
 
 //GET ALL PROJECTS
 server.get('/projects', (req, res) => {
