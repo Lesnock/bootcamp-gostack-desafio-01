@@ -10,7 +10,7 @@ let requisitionCounter = 0
 function checkProjectExists (req, res, next) {
     const { id } = req.params
 
-    const project = projects.filter(proj => proj.id == id)
+    const project = projects.find(proj => proj.id == id)
 
     if (! project)
         return res.status(400).json({ error: 'Project does not exists!' })
@@ -58,7 +58,7 @@ server.post('/projects', (req, res) => {
         id, title, tasks: []
     })
 
-    res.json(projects)
+    res.status(201).json(projects)
 })
 
 //UPDATE PROJECT
@@ -66,14 +66,8 @@ server.put('/projects/:id', checkProjectExists, (req, res) => {
     const { id } = req.params
     const { title } = req.body
 
-    for (const index in projects) {
-        const project = projects[index]
-
-        if (project.id == id) {
-            project.title = title
-            break
-        }
-    }
+    const projectIndex = projects.findIndex(project => project.id == id)
+    projects[projectIndex].title = title
 
     res.json(projects)
 })
@@ -101,7 +95,7 @@ server.post('/projects/:id/tasks', checkProjectExists, (req, res) => {
         }
     }
 
-    res.json(projects)
+    res.status(201).json(projects)
 })
 
 const PORT = 3000
